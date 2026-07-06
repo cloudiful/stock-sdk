@@ -1,0 +1,16 @@
+[package]
+name = "stock-sdk-core"
+version.workspace = true
+edition = "2024"
+license = "Apache-2.0"
+description = "Core types and contracts for stock-goes-stonk screening scripts."
+repository = "https://forgejo.cloud1ful.com/research/stock-sdk"
+readme = "README.md"
+publish = ["forgejo"]
+
+[dependencies]
+chrono = { version = "0.4.45", default-features = false, features = ["serde", "std"] }
+schemars = { version = "1.2.1", features = ["chrono04"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+utoipa = { version = "5.5.0", features = ["chrono"] }

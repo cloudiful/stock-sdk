@@ -1,0 +1,12 @@
+[package]
+name = "stock-sdk"
+version.workspace = true
+edition = "2024"
+license = "Apache-2.0"
+description = "Public SDK for stock-goes-stonk screening scripts."
+repository = "https://forgejo.cloud1ful.com/research/stock-sdk"
+readme = "README.md"
+publish = ["forgejo"]
+
+[dependencies]
+stock-sdk-core.workspace = true
