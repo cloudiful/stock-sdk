@@ -1,10 +1,14 @@
+mod daily_factor;
 mod project_files;
+mod screening;
 
+pub use daily_factor::DailyFactorSnapshot;
 pub use project_files::{
     CreateStockScriptProjectFileRequest, RenameStockScriptProjectPathRequest,
     STOCK_SCRIPT_FILE_KIND_DIRECTORY, STOCK_SCRIPT_FILE_KIND_FILE, StockScriptProjectFileContent,
     StockScriptProjectFileNode, UpdateStockScriptProjectFileRequest,
 };
+pub use screening::{EffectivePriceSource, ScreeningContext, UniverseSnapshotRow};
 
 use chrono::{DateTime, Utc};
 use schemars::JsonSchema;
@@ -23,112 +27,6 @@ pub const GIT_SYNC_STATUS_FAILED: &str = "sync_failed";
 pub const VISIBILITY_KIND_PRIVATE: &str = "private";
 pub const VISIBILITY_KIND_PUBLIC: &str = "public";
 pub const VISIBILITY_KIND_SYSTEM: &str = "system";
-
-#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
-pub struct ScreeningContext {
-    pub universe: Vec<UniverseSnapshotRow>,
-}
-
-impl ScreeningContext {
-    pub fn universe(&self) -> &[UniverseSnapshotRow] {
-        &self.universe
-    }
-
-    pub fn by_market<'a>(
-        &'a self,
-        markets: &'a [&'a str],
-    ) -> impl Iterator<Item = &'a UniverseSnapshotRow> + 'a {
-        self.universe
-            .iter()
-            .filter(move |row| row.matches_any_market(markets))
-    }
-
-    pub fn by_industry<'a>(
-        &'a self,
-        industries: &'a [&'a str],
-    ) -> impl Iterator<Item = &'a UniverseSnapshotRow> + 'a {
-        self.universe
-            .iter()
-            .filter(move |row| row.matches_any_industry(industries))
-    }
-
-    pub fn by_ts_code<'a>(
-        &'a self,
-        ts_codes: &'a [&'a str],
-    ) -> impl Iterator<Item = &'a UniverseSnapshotRow> + 'a {
-        self.universe
-            .iter()
-            .filter(move |row| row.matches_any_ts_code(ts_codes))
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
-pub struct UniverseSnapshotRow {
-    pub ts_code: String,
-    pub symbol: Option<String>,
-    pub name: Option<String>,
-    pub industry: Option<String>,
-    pub market: Option<String>,
-    pub latest_price: Option<f64>,
-    pub pct_change: Option<f64>,
-    pub turnover_rate: Option<f64>,
-    pub volume_ratio: Option<f64>,
-    pub total_market_value: Option<f64>,
-    pub circulating_market_value: Option<f64>,
-    pub pe_ttm: Option<f64>,
-    pub pb: Option<f64>,
-    pub ps_ttm: Option<f64>,
-    pub dv_ttm: Option<f64>,
-    pub roe: Option<f64>,
-    pub gross_margin: Option<f64>,
-    pub debt_asset_ratio: Option<f64>,
-    pub ret_5d: Option<f64>,
-    pub ret_10d: Option<f64>,
-    pub ret_20d: Option<f64>,
-    pub ret_60d: Option<f64>,
-    pub volatility_20d: Option<f64>,
-    pub volatility_60d: Option<f64>,
-    pub rsi14: Option<f64>,
-    pub ma5: Option<f64>,
-    pub ma10: Option<f64>,
-    pub ma20: Option<f64>,
-    pub ma60: Option<f64>,
-    pub peg_ttm: Option<f64>,
-    pub dist_to_high_252d: Option<f64>,
-    pub dist_to_low_252d: Option<f64>,
-    pub financial_stale_days: Option<i32>,
-    pub risk_warning: Option<bool>,
-    pub data_gaps_detected: Option<bool>,
-}
-
-impl UniverseSnapshotRow {
-    pub fn matches_market(&self, market: &str) -> bool {
-        self.market.as_deref() == Some(market)
-    }
-
-    pub fn matches_any_market(&self, markets: &[&str]) -> bool {
-        markets.is_empty() || markets.iter().any(|market| self.matches_market(market))
-    }
-
-    pub fn matches_industry(&self, industry: &str) -> bool {
-        self.industry.as_deref() == Some(industry)
-    }
-
-    pub fn matches_any_industry(&self, industries: &[&str]) -> bool {
-        industries.is_empty()
-            || industries
-                .iter()
-                .any(|industry| self.matches_industry(industry))
-    }
-
-    pub fn matches_ts_code(&self, ts_code: &str) -> bool {
-        self.ts_code == ts_code
-    }
-
-    pub fn matches_any_ts_code(&self, ts_codes: &[&str]) -> bool {
-        ts_codes.is_empty() || ts_codes.iter().any(|ts_code| self.matches_ts_code(ts_code))
-    }
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema, Default)]
 pub struct CandidateRow {
