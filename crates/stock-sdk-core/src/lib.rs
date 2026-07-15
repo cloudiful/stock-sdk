@@ -185,6 +185,19 @@ pub struct StockScriptFuelUsage {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
+pub struct StockScriptRunFailure {
+    pub code: String,
+    pub category: String,
+    pub message: String,
+    pub repairable: bool,
+    pub retryable: bool,
+    pub suggested_action: String,
+    pub task_id: String,
+    pub details: Option<Value>,
+    pub trace_id: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
 pub struct StockScriptProjectSummary {
     pub script_id: String,
     pub name: String,
@@ -288,6 +301,7 @@ pub struct StockScriptRunView {
     pub script_id: String,
     pub status: String,
     pub stderr: Option<String>,
+    pub failure: Option<StockScriptRunFailure>,
     pub fuel: Option<StockScriptFuelUsage>,
     pub workspace_hash: String,
     pub git_head_commit: Option<String>,
