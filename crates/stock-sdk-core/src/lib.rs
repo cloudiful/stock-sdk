@@ -251,6 +251,9 @@ pub struct ApplyStockScriptWorkspacePatchRequest {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
 pub struct ApplyStockScriptWorkspacePatchResponse {
     pub summary: String,
+    #[schema(required)]
+    pub diff: Option<String>,
+    pub diff_truncated: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
