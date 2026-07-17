@@ -235,12 +235,32 @@ pub struct StockScriptWorkspaceEntry {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
-pub struct StockScriptWorkspaceFileResponse {
+pub struct StockScriptWorkspaceDirectoryPageResponse {
+    pub path: String,
+    pub entries: Vec<StockScriptWorkspaceEntry>,
+    pub offset: usize,
+    pub total_entries: usize,
+    pub truncated: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
+pub struct StockScriptWorkspaceFilePageResponse {
     pub path: String,
     pub content: String,
-    pub start_line: Option<usize>,
-    pub end_line: Option<usize>,
+    pub start_line: usize,
+    pub end_line: usize,
+    pub total_lines: usize,
     pub truncated: bool,
+    pub sha256: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
+pub struct StockScriptWorkspaceStatResponse {
+    pub path: String,
+    pub kind: String,
+    pub size: u64,
+    pub readonly: bool,
+    pub sha256: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
@@ -251,9 +271,24 @@ pub struct ApplyStockScriptWorkspacePatchRequest {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
 pub struct ApplyStockScriptWorkspacePatchResponse {
     pub summary: String,
+    #[serde(default)]
+    pub partial: bool,
+    #[serde(default)]
+    pub changes: Vec<StockScriptWorkspacePatchChange>,
     #[schema(required)]
     pub diff: Option<String>,
     pub diff_truncated: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
+pub struct StockScriptWorkspacePatchChange {
+    pub operation: String,
+    pub path: String,
+    pub destination: Option<String>,
+    pub status: String,
+    pub error: Option<String>,
+    pub added_lines: usize,
+    pub deleted_lines: usize,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, ToSchema)]
