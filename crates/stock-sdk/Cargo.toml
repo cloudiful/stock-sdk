@@ -4,9 +4,9 @@ version.workspace = true
 edition = "2024"
 license = "Apache-2.0"
 description = "Public SDK for stock-goes-stonk screening scripts."
-repository = "https://forgejo.cloud1ful.com/research/stock-sdk"
+repository = "https://github.com/cloudiful/stock-sdk"
 readme = "README.md"
-publish = ["forgejo"]
+publish = ["crates-io"]
 
 [dependencies]
 stock-sdk-core.workspace = true

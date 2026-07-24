@@ -1,7 +1,15 @@
+mod compute;
 mod daily_factor;
 mod project_files;
 mod screening;
 
+pub use compute::{
+    SCRIPT_ARTIFACT_KIND_CHART, SCRIPT_ARTIFACT_KIND_CSV, SCRIPT_ARTIFACT_KIND_JSON,
+    SCRIPT_ARTIFACT_KIND_MARKDOWN, SCRIPT_COMPUTE_PROTOCOL_VERSION, ScriptArtifact,
+    ScriptComputeInput, ScriptComputeResult, ScriptDataKind, ScriptDataRequest, ScriptDataSet,
+    ScriptFactorSnapshot, ScriptInputFile, ScriptPricePoint, ScriptPriceSeries,
+    ScriptQuoteSnapshot,
+};
 pub use daily_factor::DailyFactorSnapshot;
 pub use project_files::{
     CreateStockScriptProjectFileRequest, RenameStockScriptProjectPathRequest,
@@ -19,6 +27,7 @@ use utoipa::ToSchema;
 pub const SDK_VERSION: &str = "v1";
 pub const SDK_CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const SCRIPT_KIND_SCREEN: &str = "screen";
+pub const SCRIPT_KIND_COMPUTE: &str = "compute";
 pub const SCRIPT_KIND_NODE_PLUGIN: &str = "node_plugin";
 pub const SOURCE_KIND_BLANK_LOCAL: &str = "blank_local";
 pub const SOURCE_KIND_GIT_CLONE: &str = "git_clone";
@@ -345,6 +354,8 @@ pub struct StockScriptRunView {
     pub git_head_commit: Option<String>,
     pub input: Value,
     pub report: Option<ScreeningReport>,
+    pub result_kind: Option<String>,
+    pub result: Option<ScriptComputeResult>,
     pub created_at: DateTime<Utc>,
     pub started_at: Option<DateTime<Utc>>,
     pub finished_at: Option<DateTime<Utc>>,
